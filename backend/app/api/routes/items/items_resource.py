@@ -23,7 +23,6 @@ from app.models.schemas.items import (
 )
 from app.resources import strings
 from app.services.items import check_item_exists, get_slug_for_item
-from app.services.dalle import generate_image_from_string
 from app.services.event import send_event
 
 router = APIRouter()
@@ -59,9 +58,9 @@ async def list_items(
     name="items:create-item",
 )
 async def create_new_item(
-    item_create: ItemInCreate = Body(..., embed=True, alias="item"), # read body request
+    item_create: ItemInCreate = Body(..., embed=True, alias="item"),
     user: User = Depends(get_current_user_authorizer()),
-    items_repo: ItemsRepository = Depends(get_repository(ItemsRepository)), # db.Conn
+    items_repo: ItemsRepository = Depends(get_repository(ItemsRepository)),
 ) -> ItemInResponse:
     slug = get_slug_for_item(item_create.title)
     if await check_item_exists(items_repo, slug):
@@ -69,9 +68,6 @@ async def create_new_item(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=strings.ITEM_ALREADY_EXISTS,
         )
-    if not item_create.image:
-        item_create.image = generate_image_from_string(item_create.title)
-
     item = await items_repo.create_item(
         slug=slug,
         title=item_create.title,

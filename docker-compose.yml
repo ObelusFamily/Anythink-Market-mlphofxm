@@ -5,6 +5,7 @@ services:
     container_name: anythink-backend-python
     command: >
       sh -c "cd backend &&
+            poetry lock &&
             poetry install &&
             poetry export -f "requirements.txt" --without-hashes --with-credentials > "requirements.txt"
             /wait-for-it.sh postgres-python:5432 -q -t 60 && 

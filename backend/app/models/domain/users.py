@@ -10,6 +10,7 @@ class User(RWModel):
     email: str
     bio: str = ""
     image: Optional[str] = None
+   
 
 
 class UserInDB(IDModelMixin, DateTimeModelMixin, User):

@@ -10,6 +10,7 @@ class User(RWModel):
     email: str
     bio: str = ""
     image: Optional[str] = None
+    isVerified: bool = False
 
 
 class UserInDB(IDModelMixin, DateTimeModelMixin, User):
